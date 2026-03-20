@@ -83,14 +83,14 @@ export default function Display() {
     <main className="flex h-screen w-screen items-center justify-center bg-black text-white font-sans">
       {/* ── IDLE ── */}
       {state === "idle" && (
-        <div className="flex w-full max-w-[480px] flex-col items-center justify-center gap-6 p-8 text-center">
+        <div className="flex w-full max-w-120 flex-col items-center justify-center gap-6 p-8 text-center">
           <p className="text-xl text-gray-500">Idle</p>
         </div>
       )}
 
       {/* ── FORM ── */}
       {state === "form" && (
-        <div className="flex w-full max-w-[480px] flex-col items-center justify-center gap-6 p-8 text-center">
+        <div className="flex w-full max-w-120 flex-col items-center justify-center gap-6 p-8 text-center">
           {planetId && (
             <p className="text-xs uppercase tracking-[0.15em] text-gray-400">
               Planet {planetId}
@@ -104,7 +104,7 @@ export default function Display() {
             <div className="flex flex-col gap-1.5 text-left">
               <label
                 htmlFor="name"
-                className="text-xs uppercase tracking-[0.1em] text-gray-400"
+                className="text-xs uppercase tracking-widest text-gray-400"
               >
                 Name
               </label>
@@ -122,7 +122,7 @@ export default function Display() {
             <div className="flex flex-col gap-1.5 text-left">
               <label
                 htmlFor="initials"
-                className="text-xs uppercase tracking-[0.1em] text-gray-400"
+                className="text-xs uppercase tracking-widest text-gray-400"
               >
                 Initials
               </label>
@@ -141,7 +141,7 @@ export default function Display() {
             <div className="flex flex-col gap-1.5 text-left">
               <label
                 htmlFor="pattern"
-                className="text-xs uppercase tracking-[0.1em] text-gray-400"
+                className="text-xs uppercase tracking-widest text-gray-400"
               >
                 Flag pattern
               </label>
@@ -174,7 +174,7 @@ export default function Display() {
 
       {/* ── SUCCESS ── */}
       {state === "success" && (
-        <div className="flex w-full max-w-[480px] flex-col items-center justify-center gap-6 p-8 text-center">
+        <div className="flex w-full max-w-120 flex-col items-center justify-center gap-6 p-8 text-center">
           <p className="text-5xl text-green-500">✓</p>
           <h2 className="text-[1.75rem] font-light">Flag planted</h2>
           <p className="text-[0.95rem] text-gray-400">
