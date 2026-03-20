@@ -71,7 +71,7 @@ Defined in `prisma/schema.prisma`.
 ```text
 app/
 	api/
-		state/
+    flags/
 			route.ts        # REST API for reading/creating flags
 	display/
 		page.tsx          # Real-time display/claim screen
@@ -154,7 +154,7 @@ npx prisma studio
 
 Base URL (local): `http://localhost:3000`
 
-### `GET /api/state`
+### `GET /api/flags`
 
 Returns all flags ordered by newest first.
 
@@ -172,7 +172,7 @@ Response `200`:
 ]
 ```
 
-### `POST /api/state`
+### `POST /api/flags`
 
 Creates a new flag using the JSON body.
 
@@ -254,13 +254,7 @@ For SQLite in production:
 
 ## Known Issues
 
-1. `app/display/page.tsx` currently posts to `/api/flags`, but the implemented API route is `/api/state`.
-2. Home page (`app/page.tsx`) still contains the default Next.js starter template.
-3. Route folder name is `state` while it actually manages `Flag` records, which may be confusing.
-
-Suggested fix for issue 1:
-
-- Update the fetch URL in `app/display/page.tsx` from `/api/flags` to `/api/state`, or add a dedicated `/api/flags` route.
+1. Home page (`app/page.tsx`) still contains the default Next.js starter template.
 
 ## Troubleshooting
 
@@ -278,7 +272,7 @@ Suggested fix for issue 1:
 ### API returns empty array
 
 - This is expected before first submission.
-- Insert a record with `POST /api/state` or via the display flow after fixing the endpoint mismatch.
+- Insert a record with `POST /api/flags` or via the display flow.
 
 ---
 
