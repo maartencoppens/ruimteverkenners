@@ -24,13 +24,29 @@ export default function Display() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:3000");
+    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+    const ws = new WebSocket(`${protocol}://${window.location.host}/api/ws`);
 
-    ws.onmessage = (event) => {
+    ws.onmessage = async (event) => {
       try {
-        const data = JSON.parse(event.data);
-        if (data.active) {
-          setPlanetId(data.planetId ?? null);
+        const raw =
+          typeof event.data === "string"
+            ? event.data
+            : event.data instanceof Blob
+              ? await event.data.text()
+              : new TextDecoder().decode(event.data);
+
+        const payload = JSON.parse(raw) as {
+          isZoomedIn?: boolean | number | string;
+          planetId?: string | number | null;
+        };
+
+        const isZoomedIn =
+          payload.isZoomedIn === true || Number(payload.isZoomedIn) === 1;
+        const nextPlanetId = payload.planetId ?? null;
+
+        if (isZoomedIn) {
+          setPlanetId(nextPlanetId !== null ? String(nextPlanetId) : null);
           setName("");
           setInitials("");
           setPattern(PATTERNS[0]);

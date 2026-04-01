@@ -4,19 +4,24 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node server.js",
+    "prepare": "next-ws patch",
+    "dev": "next dev",
+    "dev:local": "node server.js",
     "build": "next build",
     "start": "NODE_ENV=production node server.js"
   },
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.5.0",
     "@prisma/client": "^7.5.0",
+    "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.8.0",
     "next": "16.2.0",
+    "next-auth": "^4.24.13",
+    "next-ws": "^2.2.2",
     "prisma": "^7.5.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "ws": "^8.19.0"
+    "ws": "^8.20.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
