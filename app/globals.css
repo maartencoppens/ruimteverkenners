@@ -1,24 +1,110 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-body: var(--font-chillax), sans-serif;
+  --font-heading: var(--font-supreme), sans-serif;
+  --light-purple: #a393eb;
+  --purple-gradient: linear-gradient(to bottom, #5e63b6 0%, #a393eb 100%);
+  --light-blue: #abe8ff;
+  --white: #dbdbdb;
+  --dark-purple: #5e63b6;
+  --white-transparent: #dbdbdb10;
+  --slider-gradient-primary: linear-gradient(
+    to right,
+    #e14d4d 0%,
+    #5fc88f 45%,
+    #5fc88f 55%,
+    #dafdfd 100%
+  );
+  --slider-gradient-secondary: linear-gradient(
+    to right,
+    #e14d4d 0%,
+    #e3ac55 35%,
+    #5fc88f 50%,
+    #e3ac55 65%,
+    #e14d4d 100%
+  );
+  --space-10: 10px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-28: 28px;
+  --space-30: 30px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-50: 50px;
+  --space-96: 96px;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-text-primary: var(--light-blue);
+  --color-text-secondary: var(--white);
+  --color-icon-primary: var(--white);
+  --color-icon-secondary: var(--light-blue);
+  --color-title: var(--light-purple);
+  --color-title-gradient: var(--purple-gradient);
+  --color-background-primary: var(--dark-purple);
+  --color-background-secondary: var(--white-transparent);
+  --color-border-primary: var(--light-blue);
+  --color-border-secondary: var(--white-transparent);
+  --color-border-tertiary: var(--dark-purple);
+  --color-border-quaternary: var(--white);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --text-body-primary: var(--space-24);
+  --text-body-secondary: var(--space-28);
+  --text-body-tertiary: var(--space-32);
+  --text-subtitle-primary: var(--space-50);
+  --text-subtitle-secondary: var(--space-40);
+  --text-subtitle-tertiary: var(--space-30);
+  --text-title-primary: var(--space-96);
+  --text-title-secondary: var(--space-48);
+
+  --spacing-3xs: var(--space-10);
+  --spacing-2xs: var(--space-16);
+  --spacing-xs: var(--space-24);
+  --spacing-sm: var(--space-28);
+  --spacing-md: var(--space-30);
+  --spacing-lg: var(--space-32);
+  --spacing-xl: var(--space-40);
+  --spacing-2xl: var(--space-48);
+  --spacing-3xl: var(--space-50);
+  --spacing-4xl: var(--space-96);
 }
 
 body {
-  @apply bg-background text-foreground font-sans;
+  background: black;
+  background-image: url(/space-background.png);
+  background-size: cover;
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}
+
+@layer components {
+  .bg-slider-primary {
+    background: var(--slider-gradient-primary);
+  }
+  .bg-slider-secondary {
+    background: var(--slider-gradient-secondary);
+  }
+  .title-gradient {
+    background: var(--color-title-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .display-container {
+    box-sizing: border-box;
+    padding: 1rem 1rem;
+  }
 }
