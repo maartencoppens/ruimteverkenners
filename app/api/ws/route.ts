@@ -55,7 +55,6 @@ export function UPGRADE(
     const data = toMessage(text);
     const isZoomedIn =
       data.isZoomedIn === true || Number(data.isZoomedIn) === 1;
-
     const payload = JSON.stringify({
       isZoomedIn,
       planetId: data.planetId,
@@ -67,6 +66,6 @@ export function UPGRADE(
       }
     });
 
-    console.log("Received WS message:", text);
+    // console.log("Received WS message:", data);
   });
 }

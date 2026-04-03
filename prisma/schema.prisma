@@ -18,10 +18,58 @@ model Flag {
   pattern   String
 }
 
-model Planet {
-  id        Int      @id @default(autoincrement())
-  name      String
+model Planeet {
+  id                    Int           @id @default(autoincrement())
 
+  // Planeet
+  planeetnaam           String?       @map("planeetnaam")
+  planeettype           Planeettype
+  massaPlaneet          Float         @map("massa_planeet")          // in aardmassa (M⊕)
+  diameterPlaneet       Float         @map("diameter_planeet")       // in km
+  gravitatiekracht      Float         @map("gravitatiekracht")       // in m/s²
+  jaarTovAarde          Float         @map("jaar_tov_aarde")         // verhouding t.o.v. aards jaar
+  afstandVanAarde       Float         @map("afstand_van_aarde")      // in lichtjaar
+  afstandVanSter        Float         @map("afstand_van_ster")       // in AU
+  weetje                String?       @map("weetje")                 // bijv. atmosfeerinfo
+
+  // Ster
+  stertype              Stertype
+  stermassa             Float         @map("stermassa")              // in zonsmassa (M☉)
+  sterstraal            Float         @map("sterstraal")             // in zonstraal (R☉)
+  temperatuurSter       Float         @map("temperatuur_ster")       // in Kelvin
+  levensduurSter        Float         @map("levensduur_ster")        // in miljard jaar
+  leeftijdSter          Float         @map("leeftijd_ster")          // in miljard jaar
+
+  // Sterrenstelsel
+  aantalPlanetenStelsel Int           @map("aantal_planeten_stelsel")
+
+  @@map("planeet")
+}
+
+enum Planeettype {
+  ROTSPLANEET
+  GASREUS
+  IJSREUS
+  DWERGPLANEET
+  SUPERAARDE
+  HEETJUPITER
+
+  @@map("planeettype")
+}
+
+enum Stertype {
+  O
+  B
+  A
+  F
+  G
+  K
+  M
+  NEUTRONENSTER
+  WITTE_DWERG
+  ZWART_GAT
+
+  @@map("stertype")
 }
 
 model Users {
@@ -31,4 +79,3 @@ model Users {
   password  String
   Role      String
 }
-
