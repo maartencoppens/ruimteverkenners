@@ -1,41 +1,55 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import Card from "../components/Card";
-import Slider from "../components/Slider";
-import Button from "../components/Button";
-import Image from "next/image";
 import MiddleColumn from "../sections/MiddleColumn";
 import LeftInfoColumn from "../sections/LeftInfoColumn";
 import RightInfoColumn from "../sections/RightInfoColumn";
 import { Planet } from "../types/planet";
+import Idle from "../sections/Idle";
+import VideoBackground from "../components/VideoBackground";
+import FlagForm from "../sections/FlagForm";
+import ExtraInfo from "../sections/ExtraInfo";
 
 const PATTERNS = [
-  "Horizontal stripes",
-  "Vertical stripes",
-  "Cross",
-  "Diagonal",
-  "Solid color",
-  "Quarters",
-  "Circle center",
-  "Star",
+  "#7c5cff",
+  "#ff9448",
+  "#52d661",
+  "#f43aa6",
+  "#7d91ad",
+  "#46b4f0",
+  "#ff5a54",
+  "#24a356",
+  "#9b51e0",
+  "#f2c500",
+  "#2f3c97",
+  "#ff7066",
+  "#a5ff2f",
+  "#5d4df4",
+  "#f00035",
 ];
 
-type State = "idle" | "form" | "success" | "planet-info";
-type currentPlanetScreen = "info" | "flag-form" | "home";
+type State = "idle" | "planet-info";
+type currentPlanetScreen = "info" | "flag-form" | "extra-info";
 
-export default function Display() {
+function DisplayPage() {
   const [state, setState] = useState<State>("idle");
   const [planetId, setPlanetId] = useState<string | null>(null);
   const [planet, setPlanet] = useState<Planet | null>(null);
-  const [name, setName] = useState("");
   const [initials, setInitials] = useState("");
   const [pattern, setPattern] = useState(PATTERNS[0]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [currentScreen, setCurrentScreen] =
-    useState<currentPlanetScreen>("home");
+    useState<currentPlanetScreen>("info");
+
+  const gridLayout =
+    currentScreen === "info"
+      ? "grid-cols-[1fr_1.2fr_1fr]"
+      : currentScreen === "extra-info"
+        ? "grid-cols-[1.2fr_1fr_0fr]"
+        : "grid-cols-[0fr_1fr_1.2fr]";
 
   // Fetch planet info when planetId changes
   useEffect(() => {
@@ -50,11 +64,11 @@ export default function Display() {
         if (!res.ok) throw new Error("Failed to fetch planet");
         const data = await res.json();
         setPlanet(data);
+        console.log(data);
       } catch {
         setPlanet(null);
       }
     };
-
     void fetchPlanet();
   }, [planetId]);
 
@@ -84,7 +98,6 @@ export default function Display() {
         if (isZoomedIn) {
           setPlanetId(nextPlanetId !== null ? String(nextPlanetId) : null);
 
-          setName("");
           setInitials("");
           setPattern(PATTERNS[0]);
           setError(null);
@@ -106,7 +119,7 @@ export default function Display() {
 
   //submit flag to API
   const handleSubmit = async () => {
-    if (!name.trim() || !initials.trim()) {
+    if (!initials.trim()) {
       setError("Please fill in all fields.");
       return;
     }
@@ -117,13 +130,12 @@ export default function Display() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: name.trim(),
           initials: initials.trim(),
           pattern,
         }),
       });
       if (!res.ok) throw new Error("Failed to submit");
-      setState("success");
+      setCurrentScreen("info");
       setTimeout(() => setState("idle"), 4000);
     } catch {
       setError("Something went wrong. Try again.");
@@ -133,81 +145,71 @@ export default function Display() {
   };
 
   return (
-    <main>
-      {/* ── IDLE ── */}
-      {state === "idle" && (
-        <div>
-          <p>Idle</p>
-        </div>
-      )}
+    <main className="relative min-h-dvh">
+      <VideoBackground />
+      <div className="relative z-10">
+        {/* ── IDLE ── */}
+        {state === "idle" && <Idle />}
 
-      {/* PLANET INFO */}
-      {state === "planet-info" && (
-        <div className="grid grid-cols-3 gap-xs display-container h-dvh overflow-hidden">
-          {/* Left column */}
-          <LeftInfoColumn planet={planet} />
-          {/* Middle column */}
-          <MiddleColumn planet={planet} />
-          {/* Right column */}
-          <RightInfoColumn planet={planet} />
-        </div>
-      )}
-
-      {/* ── FORM ── */}
-      {state === "form" && (
-        <div>
-          {planetId && <p>Planet {planetId}</p>}
-          <h1>Claim your planet</h1>
-
-          <div>
-            <div>
-              <label htmlFor="name">Name</label>
-              <input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Your name"
-                autoComplete="off"
-              />
+        {/* PLANET INFO */}
+        {state === "planet-info" && (
+          <div
+            className={`grid ${gridLayout} gap-xs display-container h-dvh overflow-hidden transition-all duration-500`}
+          >
+            <div
+              className={
+                currentScreen === "flag-form" ? "overflow-hidden opacity-0" : ""
+              }
+            >
+              {currentScreen === "extra-info" ? (
+                <ExtraInfo planet={planet} />
+              ) : (
+                <LeftInfoColumn
+                  planet={planet}
+                  onShowExtraInfo={() => setCurrentScreen("extra-info")}
+                  onSearchFurther={() => setState("idle")}
+                />
+              )}
             </div>
 
-            <div>
-              <label htmlFor="initials">Initials</label>
-              <input
-                id="initials"
-                type="text"
-                value={initials}
-                onChange={(e) => setInitials(e.target.value)}
-                placeholder="e.g. AB"
-                maxLength={4}
-                autoComplete="off"
-              />
-            </div>
+            <MiddleColumn
+              planet={planet}
+              currentScreen={currentScreen}
+              onBack={() => setCurrentScreen("info")}
+            />
 
-            <div>
-              <label htmlFor="pattern">Flag pattern</label>
-              <select
-                id="pattern"
-                value={pattern}
-                onChange={(e) => setPattern(e.target.value)}
-              >
-                {PATTERNS.map((p) => (
-                  <option key={p} value={p}>
-                    {p}
-                  </option>
-                ))}
-              </select>
+            <div
+              className={
+                currentScreen === "extra-info"
+                  ? "overflow-hidden opacity-0"
+                  : ""
+              }
+            >
+              {currentScreen === "flag-form" ? (
+                <FlagForm
+                  initials={initials}
+                  setInitials={setInitials}
+                  pattern={pattern}
+                  setPattern={setPattern}
+                  patternArray={PATTERNS}
+                  submitting={submitting}
+                  error={error}
+                  handleSubmit={handleSubmit}
+                />
+              ) : (
+                <RightInfoColumn
+                  planet={planet}
+                  onShowFlagForm={() => setCurrentScreen("flag-form")}
+                />
+              )}
             </div>
           </div>
-
-          {error && <p>{error}</p>}
-
-          <button onClick={handleSubmit} disabled={submitting}>
-            {submitting ? "Submitting..." : "Submit flag"}
-          </button>
-        </div>
-      )}
+        )}
+      </div>
     </main>
   );
 }
+
+export default dynamic(async () => DisplayPage, {
+  ssr: false,
+});

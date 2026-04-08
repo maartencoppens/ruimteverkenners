@@ -49,6 +49,7 @@
   --color-border-secondary: var(--white-transparent);
   --color-border-tertiary: var(--dark-purple);
   --color-border-quaternary: var(--white);
+  --color-border-quinary: var(--light-purple);
 
   --text-body-primary: var(--space-24);
   --text-body-secondary: var(--space-28);
@@ -73,8 +74,7 @@
 
 body {
   background: black;
-  background-image: url(/space-background.png);
-  background-size: cover;
+
   color: var(--color-text-primary);
   font-family: var(--font-body);
 }
@@ -106,5 +106,30 @@ h6 {
   .display-container {
     box-sizing: border-box;
     padding: 1rem 1rem;
+  }
+
+  .video-bg-wrapper {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .video-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    z-index: 0;
+  }
+  .text-danger {
+    color: #ff4d4d;
+    font-weight: bold;
   }
 }

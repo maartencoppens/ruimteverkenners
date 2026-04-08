@@ -4,46 +4,39 @@ import Card from "../components/Card";
 import Slider from "../components/Slider";
 import Button from "../components/Button";
 import { Planet } from "../types/planet";
+import DiameterVisualisation from "../components/DiameterVisualisation";
 
 type LeftColumnInfoProps = {
   planet: Planet | null;
+  onShowExtraInfo: () => void;
+  onSearchFurther?: () => void;
 };
 
-const LeftInfoColumn = ({ planet }: LeftColumnInfoProps) => {
+const LeftInfoColumn = ({
+  planet,
+  onShowExtraInfo,
+  onSearchFurther,
+}: LeftColumnInfoProps) => {
   return (
     <>
       <div className="h-full flex flex-col justify-between overflow-hidden">
         <div>
-          <div className="border-b border-border-primary p-4 w-full flex items-center gap-3.5">
+          <div className="border-b-4 border-border-quinary p-4 w-full flex items-center gap-3.5">
             <Image
-              src="/planet-blue.svg"
+              src="/planet-purple.svg"
               alt="Planet icon"
               width={40}
               height={40}
               className=""
             />
-            <h2 className="text-subtitle-primary">Planeet</h2>
+            <h2 className="text-subtitle-primary text-title font-bold">
+              Planeet
+            </h2>
           </div>
           <div className="p-4 flex flex-col items-center">
             <h3 className="text-subtitle-secondary">Grootte</h3>
             <Card className="flex gap-xl justify-center">
-              <div>
-                <Image
-                  src="/aarde-grootte.svg"
-                  alt="Earth icon"
-                  width={150}
-                  height={150}
-                />
-                <Image
-                  src={"/double-arrow.svg"}
-                  alt="Double arrow"
-                  width={150}
-                  height={20}
-                />
-                <p className="text-center text-body-primary">
-                  {planet?.diameterPlaneet}
-                </p>
-              </div>
+              <DiameterVisualisation diameter={planet?.diameterPlaneet} />
               <div className="flex flex-col items-center">
                 <Image
                   src={"/weight-icon.svg"}
@@ -55,16 +48,46 @@ const LeftInfoColumn = ({ planet }: LeftColumnInfoProps) => {
               </div>
             </Card>
           </div>
-          <div className="w-full">
-            <h3 className="text-subtitle-secondary">Afstand van de ster</h3>
-            <Slider variant="primary" />
-          </div>
-          <div className="w-full">
-            <h3 className="text-subtitle-secondary">Zwaartekracht</h3>
-            <Slider variant="secondary" />
+          <div className="flex flex-col gap-3xs">
+            <div className="w-full">
+              <h3 className="text-subtitle-secondary">Afstand van de ster</h3>
+              <Slider
+                variant="primary"
+                mode="icon"
+                value={planet?.afstandVanSter}
+                min={0.005}
+                max={100}
+                scale="log"
+                leftIcon="/fire.svg"
+                markerIcon="/planet-purple-accent.svg"
+                rightIcon="/ice.svg"
+                leftLabel="DICHT"
+                label={`${planet?.afstandVanSter} AE`}
+                rightLabel="VER"
+              />
+            </div>
+            <div className="w-full">
+              <h3 className="text-subtitle-secondary">Zwaartekracht</h3>
+              <Slider
+                variant="secondary"
+                mode="icon"
+                value={planet?.gravitatiekracht}
+                min={0}
+                max={2}
+                leftLabel="LAAG"
+                leftIcon="/gravitatie-laag.svg"
+                markerIcon="/planet-purple-accent.svg"
+                label={`${planet?.gravitatiekracht} g`}
+                rightLabel="HOOG"
+                rightIcon="/gravitatie-hoog.svg"
+              />
+            </div>
           </div>
         </div>
-        <Button label="Plant je vlag" />
+        <div className="flex items-center gap-3xs">
+          <Button label="?" rounded={true} onClick={onShowExtraInfo} />
+          <Button label="Zoek verder" onClick={onSearchFurther} />
+        </div>
       </div>
     </>
   );
