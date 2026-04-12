@@ -46,10 +46,10 @@ function DisplayPage() {
 
   const gridLayout =
     currentScreen === "info"
-      ? "grid-cols-[1fr_1.2fr_1fr]"
+      ? "grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,1fr)]"
       : currentScreen === "extra-info"
-        ? "grid-cols-[1.2fr_1fr_0fr]"
-        : "grid-cols-[0fr_1fr_1.2fr]";
+        ? "grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,0fr)]"
+        : "grid-cols-[minmax(0,0fr)_minmax(0,1fr)_minmax(0,1.2fr)]";
 
   // Fetch planet info when planetId changes
   useEffect(() => {
@@ -60,7 +60,9 @@ function DisplayPage() {
 
     const fetchPlanet = async () => {
       try {
-        const res = await fetch(`/api/planet?planetId=${planetId}`);
+        const res = await fetch(`/api/planet?planetId=${planetId}`, {
+          cache: "no-store",
+        });
         if (!res.ok) throw new Error("Failed to fetch planet");
         const data = await res.json();
         setPlanet(data);
@@ -157,35 +159,66 @@ function DisplayPage() {
             className={`grid ${gridLayout} gap-xs display-container h-dvh overflow-hidden transition-all duration-500`}
           >
             <div
-              className={
-                currentScreen === "flag-form" ? "overflow-hidden opacity-0" : ""
-              }
+              className={`relative min-w-0 overflow-hidden transition-opacity duration-300 ${
+                currentScreen === "flag-form" ? "opacity-0" : "opacity-100"
+              }`}
             >
-              {currentScreen === "extra-info" ? (
-                <ExtraInfo planet={planet} />
-              ) : (
+              <div
+                className={`h-full transition-opacity duration-300 ${
+                  currentScreen === "extra-info"
+                    ? "opacity-0 pointer-events-none absolute inset-0"
+                    : "opacity-100"
+                }`}
+              >
                 <LeftInfoColumn
                   planet={planet}
                   onShowExtraInfo={() => setCurrentScreen("extra-info")}
                   onSearchFurther={() => setState("idle")}
                 />
-              )}
+              </div>
+              <div
+                className={`h-full transition-opacity duration-300 ${
+                  currentScreen === "extra-info"
+                    ? "opacity-100"
+                    : "opacity-0 pointer-events-none absolute inset-0"
+                }`}
+              >
+                <ExtraInfo planet={planet} />
+              </div>
             </div>
 
-            <MiddleColumn
-              planet={planet}
-              currentScreen={currentScreen}
-              onBack={() => setCurrentScreen("info")}
-            />
+            <div className="min-w-0 overflow-hidden">
+              <MiddleColumn
+                planet={planet}
+                currentScreen={currentScreen}
+                onBack={() => setCurrentScreen("info")}
+              />
+            </div>
 
             <div
-              className={
-                currentScreen === "extra-info"
-                  ? "overflow-hidden opacity-0"
-                  : ""
-              }
+              className={`relative min-w-0 overflow-hidden transition-opacity duration-300 ${
+                currentScreen === "extra-info" ? "opacity-0" : "opacity-100"
+              }`}
             >
-              {currentScreen === "flag-form" ? (
+              <div
+                className={`h-full transition-opacity duration-300 ${
+                  currentScreen === "flag-form"
+                    ? "opacity-0 pointer-events-none absolute inset-0"
+                    : "opacity-100"
+                }`}
+              >
+                <RightInfoColumn
+                  planet={planet}
+                  onShowFlagForm={() => setCurrentScreen("flag-form")}
+                />
+              </div>
+              <div
+                className={`h-full transition-opacity duration-300 ${
+                  currentScreen === "flag-form"
+                    ? "opacity-100"
+                    : "opacity-0 pointer-events-none absolute inset-0"
+                }`}
+              >
                 <FlagForm
                   initials={initials}
                   setInitials={setInitials}
@@ -196,12 +229,7 @@ function DisplayPage() {
                   error={error}
                   handleSubmit={handleSubmit}
                 />
-              ) : (
-                <RightInfoColumn
-                  planet={planet}
-                  onShowFlagForm={() => setCurrentScreen("flag-form")}
-                />
-              )}
+              </div>
             </div>
           </div>
         )}

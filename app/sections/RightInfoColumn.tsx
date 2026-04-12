@@ -13,18 +13,18 @@ type RightInfoColumnProps = {
 const RightInfoColumn = ({ planet, onShowFlagForm }: RightInfoColumnProps) => {
   return (
     <>
-      <div className="h-full flex flex-col justify-between items-end overflow-hidden">
-        <div>
+      <div className="h-full w-full min-w-0 flex flex-col justify-between overflow-hidden">
+        <div className="w-full min-w-0">
           <div className="border-b-4 border-border-quinary p-4 w-full flex justify-end items-center gap-3.5">
             <h2 className="text-subtitle-primary text-end font-bold text-title">
               Ster
             </h2>
             <Image src="/sun-purple.svg" alt="Sun" width={40} height={40} />
           </div>
-          <div className="p-4 flex flex-col items-center w-full gap-xs">
+          <div className="p-4 flex flex-col items-center w-full min-w-0 gap-xs">
             <h3 className="text-subtitle-secondary">Levenslijn</h3>
-            <Card className="w-full">
-              <div className="w-full flex flex-col items-center justify-between">
+            <Card className="w-full min-w-0 max-w-full">
+              <div className="w-full min-w-0 flex flex-col items-center justify-between">
                 <Slider
                   variant="primary"
                   mode="arrow"
@@ -41,35 +41,39 @@ const RightInfoColumn = ({ planet, onShowFlagForm }: RightInfoColumnProps) => {
                 />
               </div>
             </Card>
-            <div className="flex gap-sm w-full">
-              <Card className="w-full">
-                <p className="text-body-primary">Aantal planeten</p>
-                <div className="flex gap-1">
-                  <span className="text-2xs text-text-secondary">
+            <div className="flex gap-sm w-full min-w-0">
+              <Card className="w-full min-w-0 max-w-full">
+                <p className="text-body-secondary min-w-0">
+                  Aantal planeten
+                </p>
+                <div className="flex min-w-0 gap-1">
+                  <span className="text-2xs text-body-primary text-text-secondary">
                     {planet?.aantalPlanetenStelsel}
                   </span>
                   <Image
-                    src="/planet-blue.svg"
-                    alt="Planets"
-                    width={15}
-                    height={15}
+                    src="/planet.svg"
+                    alt="Planet"
+                    width={24}
+                    height={24}
                   />
                 </div>
               </Card>
-              <Card className="w-full">
-                <p className="text-body-primary">Temperatuur</p>
-                <span className="text-2xs text-text-secondary">
+              <Card className="w-full min-w-0 max-w-full">
+                <p className="text-body-secondary">Temperatuur</p>
+                <span className="text-2xs text-body-primary text-text-secondary">
                   {planet?.temperatuurSter} K
                 </span>
               </Card>
             </div>
           </div>
         </div>
-        <Button
-          label="Plant je vlag"
-          icon="/flag.svg"
-          onClick={onShowFlagForm}
-        />
+        <div className="flex w-full justify-end">
+          <Button
+            label="Plant je vlag"
+            icon="/flag.svg"
+            onClick={onShowFlagForm}
+          />
+        </div>
       </div>
     </>
   );

@@ -1,4 +1,3 @@
-import { Planeet } from "@prisma/client";
 import React from "react";
 import Card from "../components/Card";
 import Button from "../components/Button";
@@ -90,18 +89,32 @@ const FlagForm = ({
             </div>
           </div>
 
-          <Card className="w-full p-sm">
-            <div className="flex h-full min-h-72 items-start justify-start">
-              <div className="h-full w-2 rounded-full bg-white/80" />
+          <Card className="w-full">
+            <div className="relative flex min-h-72 items-start justify-end overflow-hidden rounded-xl px-4 py-3">
               <div
-                className="flex h-32 w-full max-w-50 pl-3 items-center justify-start rounded-r-3xl rounded-l-md text-5xl font-bold text-white"
+                aria-hidden="true"
+                className="absolute right-[1.05rem] top-5 z-10 h-50 w-61"
                 style={{
                   backgroundColor: pattern,
-                  clipPath: "polygon(0 0, 100% 50%, 0 100%)",
+                  maskImage: "url('/personalized-flag.svg')",
+                  WebkitMaskImage: "url('/personalized-flag.svg')",
+                  maskRepeat: "no-repeat",
+                  WebkitMaskRepeat: "no-repeat",
+                  maskSize: "contain",
+                  WebkitMaskSize: "contain",
+                  maskPosition: "center",
+                  WebkitMaskPosition: "center",
                 }}
-              >
+              />
+              <div className="absolute right-[1.05rem] top-5 z-20 flex h-50 w-61 items-center justify-center pr-8 text-6xl font-bold uppercase tracking-[0.08em] text-white">
                 {previewInitials}
               </div>
+              <img
+                src="/stam.svg"
+                alt=""
+                aria-hidden="true"
+                className="relative z-30 ml-auto h-92 w-[1.1rem] object-fill"
+              />
             </div>
           </Card>
         </div>

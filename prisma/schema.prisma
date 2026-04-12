@@ -31,6 +31,7 @@ model Planeet {
   afstandVanAarde       Float         @map("afstand_van_aarde")      // in lichtjaar
   afstandVanSter        Float         @map("afstand_van_ster")       // in AU
   weetje                String?       @map("weetje")                 // bijv. atmosfeerinfo
+  nasaUrl               String?       @map("nasa_url")
 
   // Ster
   stertype              Stertype

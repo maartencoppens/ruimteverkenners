@@ -11,7 +11,7 @@ type MiddleColumnProps = {
 const MiddleColumn = ({ planet, currentScreen, onBack }: MiddleColumnProps) => {
   return (
     <>
-      <div className="h-full flex flex-col justify-between w-full relative overflow-hidden">
+      <div className="h-full min-w-0 flex flex-col justify-between w-full relative overflow-hidden">
         {currentScreen === "extra-info" && (
           <button
             type="button"
@@ -50,7 +50,7 @@ const MiddleColumn = ({ planet, currentScreen, onBack }: MiddleColumnProps) => {
             alt="Orbit around sun"
             width={550}
             height={60}
-            style={{ width: "auto", height: "auto" }}
+            className="max-w-full h-auto"
           />
           <p className="text-text-primary text-body-primary text-sm m-0">
             {planet?.jaarTovAarde} dagen
@@ -62,12 +62,12 @@ const MiddleColumn = ({ planet, currentScreen, onBack }: MiddleColumnProps) => {
           alt="Planet placeholder"
           width={550}
           height={550}
-          className="mx-auto"
+          className="mx-auto max-w-full h-auto"
           priority
         />
         {/* </div> */}
-        <div>
-          <div className="text-center">
+        <div className="min-w-0">
+          <div className="text-center min-w-0">
             <h1 className="text-title-primary title-gradient">
               {planet?.planeetnaam}
             </h1>
@@ -85,8 +85,7 @@ const MiddleColumn = ({ planet, currentScreen, onBack }: MiddleColumnProps) => {
                   alt="Distance arrow"
                   width={200}
                   height={20}
-                  className="w-full"
-                  style={{ width: "auto", height: "auto" }}
+                  className="max-w-full h-auto"
                 />
 
                 <p className="text-text-primary text-body-primary text-sm m-0">

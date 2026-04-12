@@ -53,7 +53,7 @@ const Slider = ({
           </span>
           <div className="relative flex-1">
             <div
-              className={`relative h-10 overflow-visible rounded-sm border-2 border-border-tertiary bg-slider-${variant}`}
+              className={`relative h-5 overflow-visible rounded-sm border-3 border-border-quaternary bg-slider-${variant}`}
             >
               <div
                 className="absolute inset-y-0 w-1 -translate-x-1/2 bg-border-tertiary"
@@ -81,7 +81,7 @@ const Slider = ({
     <div className="w-full">
       <div className="flex gap-4">
         {leftIcon && (
-          <div className="flex flex-col w-10 shrink-0 justify-center">
+          <div className="flex flex-col w-12 shrink-0 justify-center item-center gap-3xs">
             <Image
               src={leftIcon}
               alt=""
@@ -116,7 +116,7 @@ const Slider = ({
           )}
         </div>
         {rightIcon && (
-          <div className="flex flex-col w-10 shrink-0 justify-center items-end">
+          <div className="flex flex-col w-12 shrink-0 justify-center items-center gap-3xs">
             <Image
               src={rightIcon}
               alt=""

@@ -19,7 +19,7 @@ const DiameterVisualisation = ({ diameter }: DiameterVisualisationProps) => {
   const planetSize = Math.min(basePlanetSize * safeDiameter, 260);
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-2 max-w-1/2">
       <div className="relative flex h-65 w-65 items-center justify-center">
         <div
           className="rounded-full bg-[#6F6DD8]"

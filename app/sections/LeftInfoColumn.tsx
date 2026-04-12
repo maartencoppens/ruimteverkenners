@@ -35,9 +35,9 @@ const LeftInfoColumn = ({
           </div>
           <div className="p-4 flex flex-col items-center">
             <h3 className="text-subtitle-secondary">Grootte</h3>
-            <Card className="flex gap-xl justify-center">
+            <Card className="flex gap-xl">
               <DiameterVisualisation diameter={planet?.diameterPlaneet} />
-              <div className="flex flex-col items-center">
+              <div className="w-full flex items-center justify-center gap-3xs">
                 <Image
                   src={"/weight-icon.svg"}
                   alt="Weight icon"
@@ -50,7 +50,9 @@ const LeftInfoColumn = ({
           </div>
           <div className="flex flex-col gap-3xs">
             <div className="w-full">
-              <h3 className="text-subtitle-secondary">Afstand van de ster</h3>
+              <h3 className="text-subtitle-secondary pl-15">
+                Afstand van de ster
+              </h3>
               <Slider
                 variant="primary"
                 mode="icon"
@@ -67,7 +69,7 @@ const LeftInfoColumn = ({
               />
             </div>
             <div className="w-full">
-              <h3 className="text-subtitle-secondary">Zwaartekracht</h3>
+              <h3 className="text-subtitle-secondary pl-15">Zwaartekracht</h3>
               <Slider
                 variant="secondary"
                 mode="icon"

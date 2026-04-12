@@ -1,12 +1,72 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import Card from "./Card";
 
 type QrCodeProps = {
   className?: string;
+  nasaUrl?: string;
 };
 
-const QrCode = ({ className }: QrCodeProps) => {
+const QrCode = ({ className, nasaUrl }: QrCodeProps) => {
+  const [qrCodeSrc, setQrCodeSrc] = useState<string | null>(null);
+  const targetUrl = nasaUrl?.trim() || null;
+
+  useEffect(() => {
+    if (!targetUrl) {
+      setQrCodeSrc(null);
+      return;
+    }
+
+    let objectUrl: string | null = null;
+
+    const fetchQrCode = async () => {
+      try {
+        const response = await fetch(
+          `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(targetUrl)}&size=500x500`,
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch QR code");
+        }
+
+        const blob = await response.blob();
+        objectUrl = URL.createObjectURL(blob);
+        setQrCodeSrc(objectUrl);
+      } catch (error) {
+        console.error("QR code fetch failed", error);
+        setQrCodeSrc(null);
+      }
+    };
+
+    fetchQrCode();
+
+    return () => {
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+      }
+    };
+  }, [targetUrl]);
+
   return (
-    <div className={`w-40 h-40 bg-background-primary ${className}`}>QrCode</div>
+    <Card
+      noPadding
+      className={`max-w-60 aspect-square rounded-lg border-3 border-white/12 bg-[#2a2a2ab8] p-5 ${className || ""}`}
+    >
+      <div className="h-full w-full overflow-hidden bg-[#2f2f2f]">
+        {qrCodeSrc && targetUrl ? (
+          <img
+            src={qrCodeSrc}
+            alt="QR code linking to the NASA planet page"
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-sm text-text-secondary">
+            {targetUrl ? "QR laden..." : "Geen NASA-link"}
+          </div>
+        )}
+      </div>
+    </Card>
   );
 };
 

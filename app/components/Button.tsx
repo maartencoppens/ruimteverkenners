@@ -22,7 +22,7 @@ const Button = ({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`bg-background-primary px-lg py-2xs w-fit text-text-secondary flex items-center gap-2xs ${rounded ? "rounded-full" : "rounded-md"}`}
+      className={`bg-background-primary text-text-secondary flex items-center justify-center gap-2xs ${rounded ? "h-16 w-16 shrink-0 rounded-full p-0" : "w-fit rounded-md px-lg py-2xs"}`}
     >
       {label}
       {icon && <Image src={icon} alt="" width={20} height={20} />}
