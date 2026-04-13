@@ -1,5 +1,6 @@
 "use client";
 
+import type { Flag } from "@prisma/client";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import MiddleColumn from "../sections/MiddleColumn";
@@ -31,6 +32,10 @@ const PATTERNS = [
 
 type State = "idle" | "planet-info";
 type currentPlanetScreen = "info" | "flag-form" | "extra-info";
+type FlagsResponse = {
+  flag: Flag;
+  flags: Flag[];
+};
 
 function DisplayPage() {
   const [state, setState] = useState<State>("idle");
@@ -94,11 +99,16 @@ function DisplayPage() {
         console.log("[ws] decoded raw payload:", raw);
 
         const payload = JSON.parse(raw) as {
+          type?: string;
           isZoomedIn?: boolean | number | string;
           planetId?: string | number | null;
         };
 
         console.log("[ws] parsed payload:", payload);
+
+        if (payload.type === "flags-updated") {
+          return;
+        }
 
         const isZoomedIn =
           payload.isZoomedIn === true || Number(payload.isZoomedIn) === 1;
@@ -145,8 +155,10 @@ function DisplayPage() {
       setError("Please fill in all fields.");
       return;
     }
+
     setSubmitting(true);
     setError(null);
+
     try {
       const res = await fetch("/api/flags", {
         method: "POST",
@@ -156,9 +168,24 @@ function DisplayPage() {
           pattern,
         }),
       });
+
       if (!res.ok) throw new Error("Failed to submit");
+
+      const data = (await res.json()) as FlagsResponse;
+      const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+      const ws = new WebSocket(`${protocol}://${window.location.host}/api/ws`);
+
+      ws.addEventListener("open", () => {
+        ws.send(
+          JSON.stringify({
+            type: "flags-updated",
+            flags: data.flags,
+          }),
+        );
+        ws.close();
+      });
+
       setCurrentScreen("info");
-      setTimeout(() => setState("idle"), 4000);
     } catch {
       setError("Something went wrong. Try again.");
     } finally {

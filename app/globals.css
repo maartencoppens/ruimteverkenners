@@ -3,7 +3,7 @@
 :root {
   --font-heading: var(--font-chillax), sans-serif;
   --light-purple: #a393eb;
-  --purple-gradient: linear-gradient(to bottom, #5e63b6 0%, #a393eb 100%);
+  --purple-gradient: linear-gradient(to bottom, #5e63b6 20%, #a393eb 60%);
   --light-blue: #abe8ff;
   --white: #dbdbdb;
   --dark-purple: #5e63b6;

@@ -48,10 +48,10 @@ const Slider = ({
       <div className="w-full">
         {label && <p className="mb-3 text-center text-body-primary">{label}</p>}
         <div className="flex items-center gap-1">
-          <span className="w-12 shrink-0 text-body-primary">
+          <span className="shrink-0 text-body-primary">
             {leftLabel ?? safeMin}
           </span>
-          <div className="relative flex-1">
+          <div className="relative flex-1 px-1">
             <div
               className={`relative h-5 overflow-visible rounded-sm border-3 border-border-quaternary bg-slider-${variant}`}
             >
@@ -69,7 +69,7 @@ const Slider = ({
               />
             </div>
           </div>
-          <span className="w-12 shrink-0 text-right text-body-primary">
+          <span className="shrink-0 text-right text-body-primary">
             {rightLabel ?? safeMax}
           </span>
         </div>
@@ -79,9 +79,9 @@ const Slider = ({
 
   return (
     <div className="w-full">
-      <div className="flex gap-4">
+      <div className="flex gap-2">
         {leftIcon && (
-          <div className="flex flex-col w-12 shrink-0 justify-center item-center gap-3xs">
+          <div className="flex flex-col shrink-0 w-12 justify-center items-center gap-3xs">
             <Image
               src={leftIcon}
               alt=""
@@ -90,7 +90,7 @@ const Slider = ({
               aria-hidden
               className="h-10 w-10 object-contain"
             />
-            <span>{leftLabel}</span>
+            <span className="text-text-secondary text-5">{leftLabel}</span>
           </div>
         )}
         <div className="relative flex-1">
@@ -108,7 +108,7 @@ const Slider = ({
           </div>
           {label && (
             <span
-              className="absolute top-auto mt-2 -translate-x-1/2 text-body-primary whitespace-nowrap"
+              className="absolute top-auto mt-2 -translate-x-1/2 text-body-primary text-text-secondary whitespace-nowrap"
               style={{ left: `${percentage}%` }}
             >
               {label}
@@ -125,7 +125,7 @@ const Slider = ({
               aria-hidden
               className="h-10 w-10 object-contain"
             />
-            <span>{rightLabel}</span>
+            <span className="text-text-secondary text-5">{rightLabel}</span>
           </div>
         )}
       </div>

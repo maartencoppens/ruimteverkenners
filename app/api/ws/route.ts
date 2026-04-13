@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import type { RouteContext } from "next-ws/server";
 import { WebSocket, type WebSocketServer } from "ws";
+import type { Flag } from "@prisma/client";
 
 export function GET() {
   return new Response("Upgrade Required", {
@@ -9,10 +10,20 @@ export function GET() {
   });
 }
 
-type Message = {
+type ZoomMessage = {
   isZoomedIn: boolean | number | string;
   planetId: number | null;
 };
+
+type FlagsMessage = {
+  type: "flags-updated";
+  flags: Flag[];
+};
+
+type Message = ZoomMessage | FlagsMessage;
+
+const isFlagsMessage = (value: Message): value is FlagsMessage =>
+  "type" in value && value.type === "flags-updated";
 
 const toMessage = (value: unknown): Message => {
   if (typeof value === "string") {
@@ -24,7 +35,15 @@ const toMessage = (value: unknown): Message => {
   }
 
   if (typeof value === "object" && value !== null) {
-    const data = value as Partial<Message>;
+    const data = value as Partial<ZoomMessage & FlagsMessage>;
+
+    if (data.type === "flags-updated" && Array.isArray(data.flags)) {
+      return {
+        type: "flags-updated",
+        flags: data.flags,
+      };
+    }
+
     const planetId =
       data.planetId === null || data.planetId === undefined
         ? null
@@ -58,6 +77,19 @@ export function UPGRADE(
             : new TextDecoder().decode(message);
 
     const data = toMessage(text);
+
+    if (isFlagsMessage(data)) {
+      const payload = JSON.stringify(data);
+
+      server.clients.forEach((peer) => {
+        if (peer.readyState === WebSocket.OPEN) {
+          peer.send(payload);
+        }
+      });
+
+      return;
+    }
+
     const isZoomedIn =
       data.isZoomedIn === true || Number(data.isZoomedIn) === 1;
     const payload = JSON.stringify({

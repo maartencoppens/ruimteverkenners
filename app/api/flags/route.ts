@@ -8,7 +8,11 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  return NextResponse.json(
-    await prisma.flag.create({ data: await req.json() }),
-  );
+  const data = await req.json();
+  const flag = await prisma.flag.create({ data });
+  const flags = await prisma.flag.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+
+  return NextResponse.json({ flag, flags });
 }

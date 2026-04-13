@@ -56,22 +56,21 @@ const MiddleColumn = ({ planet, currentScreen, onBack }: MiddleColumnProps) => {
             {planet?.jaarTovAarde} dagen
           </p>
         </div>
-        {/* <div className="w-full aspect-square relative flex items-center justify-center"> */}
-        <Image
-          src="/planet-placeholder.png"
-          alt="Planet placeholder"
-          width={550}
-          height={550}
-          className="mx-auto max-w-full h-auto"
-          priority
-        />
-        {/* </div> */}
+        <div className="max-w-full aspect-square relative flex items-center justify-center">
+          <Image
+            src="/planet-placeholder.png"
+            alt="Planet placeholder"
+            fill
+            className="mx-auto w-full h-auto"
+            priority
+          />
+        </div>
         <div className="min-w-0">
           <div className="text-center min-w-0">
-            <h1 className="font-heading text-title-primary title-gradient uppercase">
+            <h1 className="font-heading text-title-primary title-gradient uppercase leading-20">
               {planet?.planeetnaam}
             </h1>
-            <h2 className="font-heading text-title-secondary title-gradient">
+            <h2 className="font-heading text-title-secondary text-title">
               Mogelijk Bewoonbaar
             </h2>
           </div>
