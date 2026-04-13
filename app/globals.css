@@ -1,8 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --font-body: var(--font-chillax), sans-serif;
-  --font-heading: var(--font-supreme), sans-serif;
+  --font-heading: var(--font-chillax), sans-serif;
   --light-purple: #a393eb;
   --purple-gradient: linear-gradient(to bottom, #5e63b6 0%, #a393eb 100%);
   --light-blue: #abe8ff;
@@ -76,7 +75,6 @@ body {
   background: black;
 
   color: var(--color-text-primary);
-  font-family: var(--font-body);
 }
 
 h1,
@@ -89,6 +87,16 @@ h6 {
 }
 
 @layer components {
+  .font-heading {
+    font-family: var(--font-heading);
+    font-weight: 600;
+  }
+
+  .font-subheading {
+    font-family: var(--font-heading);
+    font-weight: 400;
+  }
+
   .bg-slider-primary {
     background: var(--slider-gradient-primary);
   }

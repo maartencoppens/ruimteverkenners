@@ -59,6 +59,7 @@ function DisplayPage() {
     }
 
     const fetchPlanet = async () => {
+      console.log(planetId);
       try {
         const res = await fetch(`/api/planet?planetId=${planetId}`, {
           cache: "no-store",
@@ -81,6 +82,8 @@ function DisplayPage() {
 
     ws.onmessage = async (event) => {
       try {
+        console.log("[ws] raw event data:", event.data);
+
         const raw =
           typeof event.data === "string"
             ? event.data
@@ -88,17 +91,34 @@ function DisplayPage() {
               ? await event.data.text()
               : new TextDecoder().decode(event.data);
 
+        console.log("[ws] decoded raw payload:", raw);
+
         const payload = JSON.parse(raw) as {
           isZoomedIn?: boolean | number | string;
           planetId?: string | number | null;
         };
 
+        console.log("[ws] parsed payload:", payload);
+
         const isZoomedIn =
           payload.isZoomedIn === true || Number(payload.isZoomedIn) === 1;
-        const nextPlanetId = payload.planetId ?? null;
+        const nextPlanetId =
+          payload.planetId === null || payload.planetId === undefined
+            ? null
+            : Number(payload.planetId) + 1;
+
+        console.log("[ws] mapped values:", {
+          incomingPlanetId: payload.planetId,
+          mappedPlanetId: nextPlanetId,
+          isZoomedIn,
+        });
 
         if (isZoomedIn) {
-          setPlanetId(nextPlanetId !== null ? String(nextPlanetId) : null);
+          setPlanetId(
+            nextPlanetId !== null && Number.isFinite(nextPlanetId)
+              ? String(nextPlanetId)
+              : null,
+          );
 
           setInitials("");
           setPattern(PATTERNS[0]);

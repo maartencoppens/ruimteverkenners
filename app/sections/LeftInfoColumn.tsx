@@ -21,7 +21,7 @@ const LeftInfoColumn = ({
     <>
       <div className="h-full flex flex-col justify-between overflow-hidden">
         <div>
-          <div className="border-b-4 border-border-quinary p-4 w-full flex items-center gap-3.5">
+          <div className="border-b-4 border-border-quinary w-full flex items-center gap-3.5">
             <Image
               src="/planet-purple.svg"
               alt="Planet icon"
@@ -29,12 +29,12 @@ const LeftInfoColumn = ({
               height={40}
               className=""
             />
-            <h2 className="text-subtitle-primary text-title font-bold">
+            <h2 className="text-subtitle-primary text-title font-bold uppercase">
               Planeet
             </h2>
           </div>
           <div className="p-4 flex flex-col items-center">
-            <h3 className="text-subtitle-secondary">Grootte</h3>
+            <h3 className="text-subtitle-secondary font-subheading">Grootte</h3>
             <Card className="flex gap-xl">
               <DiameterVisualisation diameter={planet?.diameterPlaneet} />
               <div className="w-full flex items-center justify-center gap-3xs">
@@ -50,7 +50,7 @@ const LeftInfoColumn = ({
           </div>
           <div className="flex flex-col gap-3xs">
             <div className="w-full">
-              <h3 className="text-subtitle-secondary pl-15">
+              <h3 className="text-subtitle-secondary pl-15 font-subheading">
                 Afstand van de ster
               </h3>
               <Slider
@@ -69,7 +69,9 @@ const LeftInfoColumn = ({
               />
             </div>
             <div className="w-full">
-              <h3 className="text-subtitle-secondary pl-15">Zwaartekracht</h3>
+              <h3 className="text-subtitle-secondary pl-15 font-subheading">
+                Zwaartekracht
+              </h3>
               <Slider
                 variant="secondary"
                 mode="icon"

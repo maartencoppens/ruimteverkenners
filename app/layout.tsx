@@ -15,7 +15,6 @@ const chillax = localFont({
       style: "normal",
     },
   ],
-  variable: "--font-chillax",
   display: "swap",
 });
 
@@ -47,11 +46,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${chillax.variable} ${supreme.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className={`${supreme.variable} h-full antialiased`}>
+      <body className={`${chillax.className} min-h-full flex flex-col`}>
+        {children}
+      </body>
     </html>
   );
 }

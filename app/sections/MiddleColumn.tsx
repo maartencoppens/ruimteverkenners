@@ -68,24 +68,24 @@ const MiddleColumn = ({ planet, currentScreen, onBack }: MiddleColumnProps) => {
         {/* </div> */}
         <div className="min-w-0">
           <div className="text-center min-w-0">
-            <h1 className="text-title-primary title-gradient">
+            <h1 className="font-heading text-title-primary title-gradient uppercase">
               {planet?.planeetnaam}
             </h1>
-            <h2 className="text-title-secondary title-gradient">
+            <h2 className="font-heading text-title-secondary title-gradient">
               Mogelijk Bewoonbaar
             </h2>
           </div>
           <div>
-            <div className="flex items-center justify-center gap-md">
+            <div className="w-full flex items-center justify-between gap-md">
               <Image src="/earth.svg" alt="Earth icon" width={60} height={60} />
 
-              <div className="flex flex-col items-center mt-2xl">
+              <div className="flex-1 min-w-0 flex flex-col items-center mt-2xl">
                 <Image
                   src="/line-arrow.svg"
                   alt="Distance arrow"
-                  width={200}
-                  height={20}
-                  className="max-w-full h-auto"
+                  width={400}
+                  height={24}
+                  className="w-full h-auto"
                 />
 
                 <p className="text-text-primary text-body-primary text-sm m-0">

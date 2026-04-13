@@ -11,7 +11,7 @@ export function GET() {
 
 type Message = {
   isZoomedIn: boolean | number | string;
-  planetId: string | number | null;
+  planetId: number | null;
 };
 
 const toMessage = (value: unknown): Message => {
@@ -25,9 +25,14 @@ const toMessage = (value: unknown): Message => {
 
   if (typeof value === "object" && value !== null) {
     const data = value as Partial<Message>;
+    const planetId =
+      data.planetId === null || data.planetId === undefined
+        ? null
+        : data.planetId;
+
     return {
       isZoomedIn: data.isZoomedIn ?? false,
-      planetId: data.planetId ?? null,
+      planetId: planetId,
     };
   }
 
@@ -57,7 +62,10 @@ export function UPGRADE(
       data.isZoomedIn === true || Number(data.isZoomedIn) === 1;
     const payload = JSON.stringify({
       isZoomedIn,
-      planetId: data.planetId,
+      planetId:
+        data.planetId === null || data.planetId === undefined
+          ? null
+          : data.planetId + 1,
     });
 
     server.clients.forEach((peer) => {
