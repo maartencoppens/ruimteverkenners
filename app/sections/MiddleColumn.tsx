@@ -1,6 +1,8 @@
 import Image from "next/image";
-import React from "react";
+import React, { Suspense } from "react";
 import { Planet } from "../types/planet";
+import PlanetHero from "../components/PlanetHero";
+import { Canvas } from "@react-three/fiber";
 
 type MiddleColumnProps = {
   planet: Planet | null;
@@ -57,13 +59,25 @@ const MiddleColumn = ({ planet, currentScreen, onBack }: MiddleColumnProps) => {
           </p>
         </div>
         <div className="max-w-full aspect-square relative flex items-center justify-center">
-          <Image
+          <Canvas
+            className="w-full h-full"
+            camera={{ position: [0, 0, 4.5], fov: 35 }}
+            dpr={[1, 1.5]}
+          >
+            <ambientLight intensity={1.4} />
+            <directionalLight position={[4, 5, 4]} intensity={2.4} />
+            <directionalLight position={[-3, -2, -4]} intensity={0.8} />
+            <Suspense fallback={null}>
+              <PlanetHero planetID={planet?.id} />
+            </Suspense>
+          </Canvas>
+          {/* <Image
             src="/planet-placeholder.png"
             alt="Planet placeholder"
             fill
             className="mx-auto w-full h-auto"
             priority
-          />
+          /> */}
         </div>
         <div className="min-w-0">
           <div className="text-center min-w-0">

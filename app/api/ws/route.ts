@@ -64,9 +64,8 @@ export function UPGRADE(
   _request: NextRequest,
   _context: RouteContext<"/api/ws">,
 ) {
-  client.send(JSON.stringify({ isZoomedIn: false, planetId: null }));
-
   client.on("message", (message) => {
+    console.log("Received WS message:", message);
     const text =
       typeof message === "string"
         ? message
@@ -80,32 +79,29 @@ export function UPGRADE(
 
     if (isFlagsMessage(data)) {
       const payload = JSON.stringify(data);
-
       server.clients.forEach((peer) => {
         if (peer.readyState === WebSocket.OPEN) {
           peer.send(payload);
         }
       });
-
       return;
     }
 
     const isZoomedIn =
       data.isZoomedIn === true || Number(data.isZoomedIn) === 1;
     const payload = JSON.stringify({
+      type: "zoom-updated",
       isZoomedIn,
       planetId:
         data.planetId === null || data.planetId === undefined
           ? null
           : data.planetId + 1,
     });
-
     server.clients.forEach((peer) => {
       if (peer.readyState === WebSocket.OPEN) {
         peer.send(payload);
       }
     });
-
     // console.log("Received WS message:", data);
   });
 }
