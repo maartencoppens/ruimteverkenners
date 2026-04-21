@@ -1,75 +1,64 @@
-import { useEffect, useState } from "react";
-import { Center, Float, useGLTF } from "@react-three/drei";
-import type { Group } from "three";
+import { useGLTF } from "@react-three/drei";
+import * as THREE from "three";
+import React, { useMemo } from "react";
+import { ThreeEvent, useFrame } from "@react-three/fiber";
+import { SkeletonUtils } from "three-stdlib";
 
 type PlanetHeroProps = {
   planetID: number | undefined;
 };
 
-type ModelStatus = "idle" | "ready" | "missing";
-
-function PlanetModel({ modelPath }: { modelPath: string }) {
-  const { scene } = useGLTF(modelPath) as { scene: Group };
-
-  return (
-    <Center>
-      <Float speed={1.5} rotationIntensity={0.3} floatIntensity={0.6}>
-        <primitive object={scene.clone()} scale={0.5} />
-      </Float>
-    </Center>
-  );
-}
-
-function PlanetFallback() {
-  return (
-    <Float speed={1.2} rotationIntensity={0.2} floatIntensity={0.4}>
-      <mesh>
-        <sphereGeometry args={[1.2, 48, 48]} />
-        <meshStandardMaterial color="#7c78e6" metalness={0.15} roughness={0.65} />
-      </mesh>
-    </Float>
-  );
-}
-
 const PlanetHero = ({ planetID }: PlanetHeroProps) => {
-  const [modelStatus, setModelStatus] = useState<ModelStatus>("idle");
+  const groupRef = React.useRef<THREE.Group>(null);
+  const isDraggingRef = React.useRef(false);
+  const lastPointerXRef = React.useRef(0);
+  const swipeVelocityRef = React.useRef(0);
+  const modelPath: string = `/models/planet-${planetID ?? 0}.glb`;
+  const model = useGLTF(modelPath);
+  const clonedScene = useMemo(() => {
+    return SkeletonUtils.clone(model.scene);
+  }, [model.scene]);
 
-  useEffect(() => {
-    if (!planetID) {
-      setModelStatus("missing");
-      return;
+  useFrame(() => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y += 0.001 + swipeVelocityRef.current;
+      swipeVelocityRef.current *= 0.94;
     }
+  });
 
-    let isCancelled = false;
-    const modelPath = `/models/${planetID}.glb`;
+  const handlePointerDown = (event: ThreeEvent<PointerEvent>) => {
+    event.stopPropagation();
+    isDraggingRef.current = true;
+    lastPointerXRef.current = event.clientX;
+  };
 
-    const verifyModel = async () => {
-      try {
-        const response = await fetch(modelPath, { method: "HEAD" });
+  const handlePointerMove = (event: ThreeEvent<PointerEvent>) => {
+    if (!isDraggingRef.current || !groupRef.current) return;
 
-        if (!isCancelled) {
-          setModelStatus(response.ok ? "ready" : "missing");
-        }
-      } catch {
-        if (!isCancelled) {
-          setModelStatus("missing");
-        }
-      }
-    };
+    event.stopPropagation();
 
-    setModelStatus("idle");
-    void verifyModel();
+    const deltaX = event.clientX - lastPointerXRef.current;
+    lastPointerXRef.current = event.clientX;
 
-    return () => {
-      isCancelled = true;
-    };
-  }, [planetID]);
+    groupRef.current.rotation.y += deltaX * 0.005;
+    swipeVelocityRef.current = deltaX * 0.0008;
+  };
 
-  if (!planetID || modelStatus !== "ready") {
-    return <PlanetFallback />;
-  }
+  const handlePointerUp = () => {
+    isDraggingRef.current = false;
+  };
 
-  return <PlanetModel modelPath={`/models/${planetID}.glb`} />;
+  return (
+    <group
+      ref={groupRef}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerOut={handlePointerUp}
+    >
+      <primitive object={clonedScene} scale={1.8} />
+    </group>
+  );
 };
 
 export default PlanetHero;

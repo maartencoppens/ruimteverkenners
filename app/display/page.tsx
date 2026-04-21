@@ -11,6 +11,8 @@ import Idle from "../sections/Idle";
 import VideoBackground from "../components/VideoBackground";
 import FlagForm from "../sections/FlagForm";
 import ExtraInfo from "../sections/ExtraInfo";
+import Button from "../components/Button";
+import { useGLTF } from "@react-three/drei";
 
 const PATTERNS = [
   "#7c5cff",
@@ -45,6 +47,7 @@ function DisplayPage() {
   const [pattern, setPattern] = useState(PATTERNS[0]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPlanetOverlay, setShowPlanetOverlay] = useState(true);
 
   const [currentScreen, setCurrentScreen] =
     useState<currentPlanetScreen>("info");
@@ -124,15 +127,20 @@ function DisplayPage() {
         });
 
         if (isZoomedIn) {
-          setPlanetId(
+          const nextPlanetIdString =
             nextPlanetId !== null && Number.isFinite(nextPlanetId)
               ? String(nextPlanetId)
-              : null,
-          );
+              : null;
+
+          setPlanetId(nextPlanetIdString);
 
           setInitials("");
           setPattern(PATTERNS[0]);
           setError(null);
+          setShowPlanetOverlay(true);
+          if (nextPlanetIdString) {
+            useGLTF.preload(`/models/planet-${nextPlanetIdString}.glb`);
+          }
           setState("planet-info");
         } else {
           // Reset to idle when zoomed out
@@ -202,82 +210,105 @@ function DisplayPage() {
 
         {/* PLANET INFO */}
         {state === "planet-info" && (
-          <div
-            className={`grid ${gridLayout} gap-xs display-container h-dvh overflow-hidden transition-all duration-500`}
-          >
+          <div className="relative h-dvh overflow-hidden">
             <div
-              className={`relative min-w-0 overflow-hidden transition-opacity duration-300 ${
-                currentScreen === "flag-form" ? "opacity-0" : "opacity-100"
-              }`}
+              className={`grid ${gridLayout} gap-xs display-container h-full overflow-hidden transition-all duration-500`}
             >
               <div
-                className={`h-full transition-opacity duration-300 ${
-                  currentScreen === "extra-info"
-                    ? "opacity-0 pointer-events-none absolute inset-0"
+                className={`relative min-w-0 overflow-hidden transition-opacity duration-300 ${
+                  showPlanetOverlay || currentScreen === "flag-form"
+                    ? "opacity-0 pointer-events-none"
                     : "opacity-100"
                 }`}
               >
-                <LeftInfoColumn
+                <div
+                  className={`h-full transition-opacity duration-300 ${
+                    currentScreen === "extra-info"
+                      ? "opacity-0 pointer-events-none absolute inset-0"
+                      : "opacity-100"
+                  }`}
+                >
+                  <LeftInfoColumn
+                    planet={planet}
+                    onShowExtraInfo={() => setCurrentScreen("extra-info")}
+                    onSearchFurther={() => setState("idle")}
+                  />
+                </div>
+                <div
+                  className={`h-full transition-opacity duration-300 ${
+                    currentScreen === "extra-info"
+                      ? "opacity-100"
+                      : "opacity-0 pointer-events-none absolute inset-0"
+                  }`}
+                >
+                  <ExtraInfo planet={planet} />
+                </div>
+              </div>
+
+              <div className="min-w-0 overflow-hidden">
+                <MiddleColumn
                   planet={planet}
-                  onShowExtraInfo={() => setCurrentScreen("extra-info")}
-                  onSearchFurther={() => setState("idle")}
+                  currentScreen={currentScreen}
+                  onBack={() => setCurrentScreen("info")}
+                  hideContent={showPlanetOverlay}
                 />
               </div>
-              <div
-                className={`h-full transition-opacity duration-300 ${
-                  currentScreen === "extra-info"
-                    ? "opacity-100"
-                    : "opacity-0 pointer-events-none absolute inset-0"
-                }`}
-              >
-                <ExtraInfo planet={planet} />
-              </div>
-            </div>
 
-            <div className="min-w-0 overflow-hidden">
-              <MiddleColumn
-                planet={planet}
-                currentScreen={currentScreen}
-                onBack={() => setCurrentScreen("info")}
-              />
-            </div>
-
-            <div
-              className={`relative min-w-0 overflow-hidden transition-opacity duration-300 ${
-                currentScreen === "extra-info" ? "opacity-0" : "opacity-100"
-              }`}
-            >
               <div
-                className={`h-full transition-opacity duration-300 ${
-                  currentScreen === "flag-form"
-                    ? "opacity-0 pointer-events-none absolute inset-0"
+                className={`relative min-w-0 overflow-hidden transition-opacity duration-300 ${
+                  showPlanetOverlay || currentScreen === "extra-info"
+                    ? "opacity-0 pointer-events-none"
                     : "opacity-100"
                 }`}
               >
-                <RightInfoColumn
-                  planet={planet}
-                  onShowFlagForm={() => setCurrentScreen("flag-form")}
-                />
-              </div>
-              <div
-                className={`h-full transition-opacity duration-300 ${
-                  currentScreen === "flag-form"
-                    ? "opacity-100"
-                    : "opacity-0 pointer-events-none absolute inset-0"
-                }`}
-              >
-                <FlagForm
-                  initials={initials}
-                  setInitials={setInitials}
-                  pattern={pattern}
-                  setPattern={setPattern}
-                  patternArray={PATTERNS}
-                  submitting={submitting}
-                  error={error}
-                  handleSubmit={handleSubmit}
-                />
+                <div
+                  className={`h-full transition-opacity duration-300 ${
+                    currentScreen === "flag-form"
+                      ? "opacity-0 pointer-events-none absolute inset-0"
+                      : "opacity-100"
+                  }`}
+                >
+                  <RightInfoColumn
+                    planet={planet}
+                    onShowFlagForm={() => setCurrentScreen("flag-form")}
+                  />
+                </div>
+                <div
+                  className={`h-full transition-opacity duration-300 ${
+                    currentScreen === "flag-form"
+                      ? "opacity-100"
+                      : "opacity-0 pointer-events-none absolute inset-0"
+                  }`}
+                >
+                  <FlagForm
+                    initials={initials}
+                    setInitials={setInitials}
+                    pattern={pattern}
+                    setPattern={setPattern}
+                    patternArray={PATTERNS}
+                    submitting={submitting}
+                    error={error}
+                    handleSubmit={handleSubmit}
+                  />
+                </div>
               </div>
             </div>
+
+            {showPlanetOverlay && (
+              <div className=" absolute inset-0 z-20 flex flex-col items-center justify-between pb-lg pt-20 gap-md">
+                <h1 className=" text-text-secondary text-subtitle-primary font-heading text-center leading-8">
+                  Je hebt een planeet gevonden!
+                </h1>
+                <div className="flex flex-col justify-center items-center gap-lg">
+                  <h2 className="text-text-secondary text-title-primary font-heading text-center">
+                    {planet?.planeetnaam}
+                  </h2>
+                  <Button onClick={() => setShowPlanetOverlay(false)}>
+                    <p className="text-title-secondary">Ontdek</p>
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

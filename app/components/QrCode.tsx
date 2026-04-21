@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Card from "./Card";
 
 type QrCodeProps = {
@@ -9,43 +9,16 @@ type QrCodeProps = {
 };
 
 const QrCode = ({ className, nasaUrl }: QrCodeProps) => {
-  const [qrCodeSrc, setQrCodeSrc] = useState<string | null>(null);
+  const [hasLoadError, setHasLoadError] = useState(false);
   const targetUrl = nasaUrl?.trim() || null;
+  const qrCodeUrl = useMemo(() => {
+    if (!targetUrl) return null;
+
+    return `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(targetUrl)}&size=500x500`;
+  }, [targetUrl]);
 
   useEffect(() => {
-    if (!targetUrl) {
-      setQrCodeSrc(null);
-      return;
-    }
-
-    let objectUrl: string | null = null;
-
-    const fetchQrCode = async () => {
-      try {
-        const response = await fetch(
-          `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(targetUrl)}&size=500x500`,
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch QR code");
-        }
-
-        const blob = await response.blob();
-        objectUrl = URL.createObjectURL(blob);
-        setQrCodeSrc(objectUrl);
-      } catch (error) {
-        console.error("QR code fetch failed", error);
-        setQrCodeSrc(null);
-      }
-    };
-
-    fetchQrCode();
-
-    return () => {
-      if (objectUrl) {
-        URL.revokeObjectURL(objectUrl);
-      }
-    };
+    setHasLoadError(false);
   }, [targetUrl]);
 
   return (
@@ -54,15 +27,16 @@ const QrCode = ({ className, nasaUrl }: QrCodeProps) => {
       className={`max-w-60 aspect-square rounded-lg border-3 border-white/12 bg-[#2a2a2ab8] p-5 ${className || ""}`}
     >
       <div className="h-full w-full overflow-hidden bg-[#2f2f2f]">
-        {qrCodeSrc && targetUrl ? (
+        {qrCodeUrl && !hasLoadError ? (
           <img
-            src={qrCodeSrc}
+            src={qrCodeUrl}
             alt="QR code linking to the NASA planet page"
             className="h-full w-full object-cover"
+            onError={() => setHasLoadError(true)}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-sm text-text-secondary">
-            {targetUrl ? "QR laden..." : "Geen NASA-link"}
+            {targetUrl ? "QR niet beschikbaar" : "Geen NASA-link"}
           </div>
         )}
       </div>

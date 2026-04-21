@@ -8,9 +8,21 @@ type MiddleColumnProps = {
   planet: Planet | null;
   currentScreen: "info" | "flag-form" | "extra-info";
   onBack: () => void;
+  hideContent?: boolean;
 };
 
-const MiddleColumn = ({ planet, currentScreen, onBack }: MiddleColumnProps) => {
+const MiddleColumn = ({
+  planet,
+  currentScreen,
+  onBack,
+  hideContent,
+}: MiddleColumnProps) => {
+  const hiddenContentClass = hideContent
+    ? "opacity-0 pointer-events-none"
+    : "opacity-100";
+  const canvasWidthClass =
+    currentScreen === "info" ? "max-w-full" : "max-w-[calc(100%-5rem)]";
+
   return (
     <>
       <div className="h-full min-w-0 flex flex-col justify-between w-full relative overflow-hidden">
@@ -19,7 +31,7 @@ const MiddleColumn = ({ planet, currentScreen, onBack }: MiddleColumnProps) => {
             type="button"
             onClick={onBack}
             aria-label="Terug"
-            className="absolute right-0 top-1/2 -translate-y-1/2 text-6xl leading-none text-white z-10"
+            className={`absolute right-0 top-1/2 -translate-y-1/2 text-6xl leading-none text-white z-10 transition-opacity duration-300 ${hiddenContentClass}`}
           >
             <Image
               src="/right-arrow-button.svg"
@@ -35,7 +47,7 @@ const MiddleColumn = ({ planet, currentScreen, onBack }: MiddleColumnProps) => {
             type="button"
             onClick={onBack}
             aria-label="Terug"
-            className="absolute left-0 top-1/2 -translate-y-1/2 text-6xl leading-none text-white z-10"
+            className={`absolute left-0 top-1/2 -translate-y-1/2 text-6xl leading-none text-white z-10 transition-opacity duration-300 ${hiddenContentClass}`}
           >
             <Image
               src="/left-arrow-button.svg"
@@ -46,7 +58,9 @@ const MiddleColumn = ({ planet, currentScreen, onBack }: MiddleColumnProps) => {
           </button>
         )}
 
-        <div className="flex flex-col items-center">
+        <div
+          className={`flex flex-col items-center transition-opacity duration-300 ${hiddenContentClass}`}
+        >
           <Image
             src="/around-sun.svg"
             alt="Orbit around sun"
@@ -58,11 +72,12 @@ const MiddleColumn = ({ planet, currentScreen, onBack }: MiddleColumnProps) => {
             {planet?.jaarTovAarde} dagen
           </p>
         </div>
-        <div className="max-w-full aspect-square relative flex items-center justify-center">
+        <div
+          className={`relative mx-auto flex aspect-square w-[min(38vw,58dvh,42rem)] items-center justify-center ${canvasWidthClass}`}
+        >
           <Canvas
-            className="w-full h-full"
-            camera={{ position: [0, 0, 4.5], fov: 35 }}
-            dpr={[1, 1.5]}
+            className="relative z-10 w-full h-full touch-none"
+            camera={{ position: [0, 0, 2.6] }}
           >
             <ambientLight intensity={1.4} />
             <directionalLight position={[4, 5, 4]} intensity={2.4} />
@@ -79,7 +94,9 @@ const MiddleColumn = ({ planet, currentScreen, onBack }: MiddleColumnProps) => {
             priority
           /> */}
         </div>
-        <div className="min-w-0">
+        <div
+          className={`min-w-0 transition-opacity duration-300 ${hiddenContentClass}`}
+        >
           <div className="text-center min-w-0">
             <h1 className="font-heading text-title-primary title-gradient uppercase leading-20">
               {planet?.planeetnaam}
