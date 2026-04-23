@@ -16,6 +16,7 @@ model Flag {
   createdAt DateTime @default(now())
   initials  String
   pattern   String
+  planetId  Int?
 }
 
 model Planeet {

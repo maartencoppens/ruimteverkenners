@@ -13,6 +13,7 @@ import FlagForm from "../sections/FlagForm";
 import ExtraInfo from "../sections/ExtraInfo";
 import Button from "../components/Button";
 import { useGLTF } from "@react-three/drei";
+import { plane } from "three/examples/jsm/Addons.js";
 
 const PATTERNS = [
   "#7c5cff",
@@ -174,6 +175,7 @@ function DisplayPage() {
         body: JSON.stringify({
           initials: initials.trim(),
           pattern,
+          planetId: planetId,
         }),
       });
 

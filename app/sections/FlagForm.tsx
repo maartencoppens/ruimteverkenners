@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import Card from "../components/Card";
 import Button from "../components/Button";
+import { Filter } from "bad-words";
+import { baddwords } from "@/public/curseWords";
 
 type FlagFormProps = {
   initials: string;
@@ -24,10 +26,29 @@ const FlagForm = ({
   handleSubmit,
 }: FlagFormProps) => {
   const previewInitials = initials.trim().slice(0, 3) || "XDD";
+  const [initialsError, setInitialsError] = useState<string | null>(null);
+  const badWordsFilter = useMemo(() => {
+    const filter = new Filter();
+    filter.addWords(...baddwords);
+    return filter;
+  }, []);
+
+  const handleInitialsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const nextInitials = e.target.value.toUpperCase();
+
+    if (badWordsFilter.isProfane(nextInitials)) {
+      setInitialsError("Deze initialen zijn niet toegestaan.");
+      setInitials(nextInitials);
+      return;
+    }
+
+    setInitialsError(null);
+    setInitials(nextInitials);
+  };
 
   return (
     <div className="w-full h-full flex items-center justify-center">
-      <Card className="relative w-full p-3">
+      <Card className="relative w-full p-3 py-6">
         <h2 className="text-title-primary font-bold title-gradient text-center border-b-2 border-border-tertiary pb-1">
           PLAATS JE VLAG
         </h2>
@@ -49,7 +70,7 @@ const FlagForm = ({
                   id="initials"
                   type="text"
                   value={initials}
-                  onChange={(e) => setInitials(e.target.value.toUpperCase())}
+                  onChange={handleInitialsChange}
                   placeholder="XDD"
                   maxLength={3}
                   autoComplete="off"
@@ -79,11 +100,19 @@ const FlagForm = ({
                 </div>
               </Card>
             </div>
-
-            {error && <p className="text-center text-danger">{error}</p>}
+            <div className="w-full h-3">
+              {(initialsError || error) && (
+                <p className="text-center text-danger">
+                  {initialsError || error}
+                </p>
+              )}
+            </div>
 
             <div className="flex justify-center">
-              <Button onClick={handleSubmit} disabled={submitting}>
+              <Button
+                onClick={handleSubmit}
+                disabled={submitting || Boolean(initialsError)}
+              >
                 {submitting ? "Submitting..." : "Plant je vlag"}
               </Button>
             </div>
