@@ -19,32 +19,27 @@ const DiameterVisualisation = ({ diameter }: DiameterVisualisationProps) => {
   const planetSize = Math.min(basePlanetSize * safeDiameter, 260);
 
   return (
-    <div className="flex flex-col items-center gap-2 max-w-2/5">
-      <div className="relative flex h-65 w-65 items-center justify-center">
+    <div className="flex flex-col items-start gap-2 w-full h-full">
+      <div className="flex items-center">
         <div
-          className="rounded-full bg-[#6F6DD8]"
-          style={{
-            width: `${planetSize}px`,
-            height: `${planetSize}px`,
-          }}
-        />
-        <div className="absolute flex items-center justify-center">
-          <Image
-            src="/earth.svg"
-            alt="Earth"
-            width={earthSize}
-            height={earthSize}
+          className={`relative flex h-65 w-65 items-center justify-center ${planetSize > earthSize && "z-10"}`}
+        >
+          <div
+            className="rounded-full bg-[#6F6DD8]/20"
+            style={{
+              width: `${planetSize}px`,
+              height: `${planetSize}px`,
+            }}
           />
+          <div className="absolute flex items-center justify-center">
+            <Image
+              src="/earth.svg"
+              alt="Earth"
+              width={earthSize}
+              height={earthSize}
+            />
+          </div>
         </div>
-      </div>
-      <div className="w-full flex flex-col items-center">
-        <Image
-          src={"/double-arrow.svg"}
-          alt="Double arrow"
-          width={planetSize}
-          height={20}
-        />
-        <p className="text-center text-body-primary">{diameter} x de Aarde</p>
       </div>
     </div>
   );

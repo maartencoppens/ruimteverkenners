@@ -24,6 +24,7 @@ const QrCode = ({ className, nasaUrl }: QrCodeProps) => {
   return (
     <Card
       noPadding
+      glass={false}
       className={`max-w-60 aspect-square rounded-lg border-3 border-white/12 bg-[#2a2a2ab8] p-5 ${className || ""}`}
     >
       <div className="h-full w-full overflow-hidden bg-[#2f2f2f]">

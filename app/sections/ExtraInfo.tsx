@@ -10,59 +10,58 @@ type ExtraInfoProps = {
 const ExtraInfo = ({ planet }: ExtraInfoProps) => {
   return (
     <div className="h-full flex items-center justify-between w-full">
-      <Card className="w-full h-full p-4 flex flex-col gap-xs relative">
-        <h2 className="text-title-primary title-gradient text-center border-b-4 border-border-tertiary pb-2">
+      <Card className="w-full p-4 flex flex-col gap-xs relative text-light-blue">
+        <h2 className="text-title-primary font-bold title-gradient text-center border-b-4 border-border-tertiary pb-2">
           Extra Info
         </h2>
-        <div className="flex flex-col gap-lg">
+        <div className="flex flex-col gap-lg text-body-md">
           <div className="flex flex-col gap-2xs">
-            <h3 className="text-subtitle-primary text-text-secondary">
+            <h3 className="text-subtitle-primary text-light-purple">
               Help, wat betekent dit?
             </h3>
             <p className="text-body-primary">
-              <span className="text-title font-bold">AE</span> ≈ 194,6 mln. km
-              (Astronomische eenheid, gemiddelde afstand aarde-zon)
+              <span className="text-light-purple font-bold">AE</span> ≈ 194,6
+              mln. km (Astronomische eenheid, gemiddelde afstand aarde-zon)
             </p>
             <p className="text-body-primary">
-              <span className="text-title font-bold">g</span> = 9,81 m/s²
+              <span className="text-light-purple font-bold">g</span> = 9,81 m/s²
               (Versnelling waarmee een voorwerp naar de aarde toe valt)
             </p>
             <p className="text-body-primary">
-              <span className="text-title font-bold">Lichtjaar</span> ≈ 9,46
-              bln. km (Afstand die licht in 1 jaar aflegt)
+              <span className="text-light-purple font-bold">Lichtjaar</span> ≈
+              9,46 bln. km (Afstand die licht in 1 jaar aflegt)
             </p>
           </div>
 
           <div className="flex flex-col gap-2xs">
-            <h3 className="text-subtitle-primary text-text-secondary">
+            <h3 className="text-subtitle-primary text-light-purple">
               Nieuwsgierig?
             </h3>
             <p className="text-body-primary">
-              <span className="text-title font-bold">Weetje</span>:{" "}
+              <span className="text-light-purple font-bold">Weetje</span>:{" "}
               {planet?.weetje}
             </p>
             <p className="text-body-primary">
-              <span className="text-title font-bold">Planeettype</span> ={" "}
+              <span className="text-light-purple font-bold">Planeettype</span> ={" "}
               {planet?.planeettype}
             </p>
             <p className="text-body-primary">
-              <span className="text-title font-bold">Stertype</span> ={" "}
+              <span className="text-light-purple font-bold">Stertype</span> ={" "}
               {planet?.stertype}
             </p>
             <p className="text-body-primary">
-              <span className="text-title font-bold">Stermassa</span> ={" "}
+              <span className="text-light-purple font-bold">Stermassa</span> ={" "}
               {planet?.stermassa}
             </p>
             <p className="text-body-primary">
-              <span className="text-title font-bold">Stergrootte</span> ={" "}
+              <span className="text-light-purple font-bold">Stergrootte</span> ={" "}
               {planet?.sterstraal}
             </p>
           </div>
         </div>
-        <QrCode
-          className="absolute bottom-0 right-0"
-          nasaUrl={planet?.nasaUrl ?? undefined}
-        />
+        <div className="max-w-60 aspect-square absolute bottom-2 right-2">
+          <QrCode nasaUrl={planet?.nasaUrl ?? undefined} />
+        </div>
       </Card>
     </div>
   );

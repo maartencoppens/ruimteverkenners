@@ -15,23 +15,7 @@ import Button from "../components/Button";
 import { useGLTF } from "@react-three/drei";
 import { plane } from "three/examples/jsm/Addons.js";
 
-const PATTERNS = [
-  "#7c5cff",
-  "#ff9448",
-  "#52d661",
-  "#f43aa6",
-  "#7d91ad",
-  "#46b4f0",
-  "#ff5a54",
-  "#24a356",
-  "#9b51e0",
-  "#f2c500",
-  "#2f3c97",
-  "#ff7066",
-  "#a5ff2f",
-  "#5d4df4",
-  "#f00035",
-];
+const PATTERNS = ["#9b51e0", "#2f3c97"];
 
 type State = "idle" | "planet-info";
 type currentPlanetScreen = "info" | "flag-form" | "extra-info";
@@ -206,15 +190,16 @@ function DisplayPage() {
   return (
     <main className="relative min-h-dvh">
       <VideoBackground />
+
       <div className="relative z-10">
         {/* ── IDLE ── */}
         {state === "idle" && <Idle />}
 
         {/* PLANET INFO */}
         {state === "planet-info" && (
-          <div className="relative h-dvh overflow-hidden">
+          <div className="relative h-svh overflow-hidden">
             <div
-              className={`grid ${gridLayout} gap-xs display-container h-full overflow-hidden transition-all duration-500`}
+              className={`grid ${gridLayout} gap-xs display-container h-full overflow-visible transition-all duration-500`}
             >
               <div
                 className={`relative min-w-0 overflow-hidden transition-opacity duration-300 ${
@@ -233,7 +218,23 @@ function DisplayPage() {
                   <LeftInfoColumn
                     planet={planet}
                     onShowExtraInfo={() => setCurrentScreen("extra-info")}
-                    onSearchFurther={() => setState("idle")}
+                    onSearchFurther={async () => {
+                      setState("idle");
+                      const protocol =
+                        window.location.protocol === "https:" ? "wss" : "ws";
+                      const ws = new WebSocket(
+                        `${protocol}://${window.location.host}/api/ws`,
+                      );
+
+                      ws.addEventListener("open", () => {
+                        ws.send(
+                          JSON.stringify({
+                            type: "search-further",
+                          }),
+                        );
+                        ws.close();
+                      });
+                    }}
                   />
                 </div>
                 <div

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import { Filter } from "bad-words";
@@ -33,22 +33,51 @@ const FlagForm = ({
     return filter;
   }, []);
 
-  const handleInitialsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const nextInitials = e.target.value.toUpperCase();
+  const validateInitials = (value: string) => {
+    const normalizedInitials = value.toUpperCase();
+    const sanitizedInitials = normalizedInitials.replace(/[^A-Z]/g, "");
+    const hadInvalidCharacters = normalizedInitials !== sanitizedInitials;
 
-    if (badWordsFilter.isProfane(nextInitials)) {
-      setInitialsError("Deze initialen zijn niet toegestaan.");
-      setInitials(nextInitials);
+    if (sanitizedInitials && badWordsFilter.isProfane(sanitizedInitials)) {
+      return {
+        sanitizedInitials,
+        error: "Deze initialen zijn niet toegestaan.",
+      };
+    }
+
+    if (hadInvalidCharacters) {
+      return {
+        sanitizedInitials,
+        error: "Alleen letters zijn toegestaan.",
+      };
+    }
+
+    return {
+      sanitizedInitials,
+      error: null,
+    };
+  };
+
+  const handleInitialsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { sanitizedInitials, error } = validateInitials(e.target.value);
+    setInitialsError(error);
+    setInitials(sanitizedInitials);
+  };
+
+  useEffect(() => {
+    const { sanitizedInitials, error } = validateInitials(initials);
+
+    if (sanitizedInitials !== initials) {
+      setInitials(sanitizedInitials);
       return;
     }
 
-    setInitialsError(null);
-    setInitials(nextInitials);
-  };
+    setInitialsError(error);
+  }, [badWordsFilter, initials, setInitials]);
 
   return (
     <div className="w-full h-full flex items-center justify-center">
-      <Card className="relative w-full p-3 py-6">
+      <Card className="relative w-full p-3 py-6 flex flex-col">
         <h2 className="text-title-primary font-bold title-gradient text-center border-b-2 border-border-tertiary pb-1">
           PLAATS JE VLAG
         </h2>
@@ -119,7 +148,7 @@ const FlagForm = ({
           </div>
 
           <Card className="w-full">
-            <div className="relative flex min-h-72 items-start justify-end overflow-hidden rounded-xl px-4 py-3">
+            <div className="relative flex min-h-72 w-full items-start justify-end overflow-hidden rounded-xl px-4 py-3">
               <div
                 aria-hidden="true"
                 className="absolute right-[1.05rem] top-5 z-10 h-50 w-61"
